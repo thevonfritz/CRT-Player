@@ -188,6 +188,35 @@ body{
   min-height:24px;
 }
 
+/* Screen brand — top-left overlay */
+#screenBrand{
+  position:absolute;top:10px;left:14px;z-index:24;
+  font:bold 10px "Space Mono",monospace;letter-spacing:3px;
+  color:#e8b850;
+  text-shadow:0 0 8px rgba(232,184,80,.6),0 0 20px rgba(232,184,80,.25);
+  pointer-events:none;
+  white-space:nowrap;
+}
+#screenBrand span{font-size:8px;letter-spacing:2px;color:#c89048;opacity:.8;}
+
+/* Monitor plastic brand — engraved above the screen bezel */
+.monitor-brand{
+  position:absolute;
+  top:18px;left:88px;
+  font:bold 11px "Space Mono",monospace;
+  letter-spacing:4px;
+  color:#5a4e34;
+  text-shadow:
+    0 1px 0 rgba(255,255,245,.55),
+    0 -1px 0 rgba(0,0,0,.2);
+  white-space:nowrap;
+  pointer-events:none;
+}
+.monitor-brand span{
+  font-size:8px;letter-spacing:3px;color:#7a6a48;margin-left:10px;
+  text-shadow:0 1px 0 rgba(255,255,245,.4),0 -1px 0 rgba(0,0,0,.15);
+}
+
 /* Back-to-home button on video view */
 #backBtn{
   position:absolute;top:10px;right:14px;z-index:25;
@@ -240,19 +269,18 @@ body{
     inset 0 1px 0 rgba(255,255,250,.7),
     inset 0 -2px 0 rgba(120,100,60,.4),
     inset 0 0 14px rgba(120,100,60,.18);
-  display:flex;align-items:center;padding:0 26px;gap:18px;
+  display:flex;align-items:center;justify-content:center;padding:0 26px;gap:18px;
 }
 .cp-brand{
   font-family:"Space Mono",monospace;
   font:bold 11px "Space Mono",monospace;letter-spacing:4px;color:#3a3220;
   text-shadow:0 1px 0 rgba(255,255,250,.6),0 -1px 0 rgba(0,0,0,.15);
   padding-right:14px;border-right:1.5px solid #a89770;
-  height:74px;display:flex;flex-direction:column;justify-content:center;
+  height:74px;display:flex;flex-direction:row;align-items:center;gap:10px;white-space:nowrap;
 }
-.cp-brand small{display:block;font-size:8px;letter-spacing:2px;color:#6a5e44;margin-top:4px;}
-.cp-brand .crest{font-size:22px;letter-spacing:8px;margin-top:2px;color:#5a4828;font-family:"VT323",monospace;}
+.cp-brand small{display:inline;font-size:8px;letter-spacing:2px;color:#6a5e44;}
 
-.cp-ctrls{display:flex;gap:18px;flex:1;align-items:center;}
+.cp-ctrls{display:flex;gap:18px;flex:1;align-items:center;justify-content:center;}
 
 .sw-group{display:flex;flex-direction:column;align-items:center;gap:6px;}
 .sw-label{font:bold 8px "Space Mono",monospace;letter-spacing:2px;color:#3a2810;
@@ -542,6 +570,7 @@ body{
       <span></span><span></span><span></span><span></span><span></span>
       <span></span><span></span>
     </div>
+    <div class="monitor-brand">CATHODE TERMINAL <span>MODEL · S-1986</span></div>
 
     <div id="crt">
       <div class="screen-content" id="screenContent">
@@ -581,12 +610,6 @@ body{
     </div>
 
     <div class="control-panel">
-      <div class="cp-brand">
-        CATHODE TERMINAL
-        <small>MODEL · S-1986</small>
-        <span class="crest">◆ ◆ ◆</span>
-      </div>
-
       <div class="cp-ctrls">
 
         <div class="sw-group">
@@ -641,18 +664,26 @@ body{
 BRT ▮▮▮▮▮▯▯▯▯▯ 05
 CTR ▮▮▮▮▮▯▯▯▯▯ 05
 VOL ▮▮▮▮▮▯▯▯▯▯ 050</span>
-      </div>
 
-      <div class="cp-power">
-        <div class="cp-led-stack">
-          <span class="cp-led prem-off" id="premLed"></span>
-          <span class="cp-led-label">PRE</span>
+        <span class="cp-divider"></span>
+
+        <div class="sw-group">
+          <div class="sw-label">LIGA</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px;margin-top:2px;">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                <span class="cp-led prem-off" id="premLed"></span>
+                <span style="font:6px 'Space Mono',monospace;letter-spacing:1px;color:#5a4820;">PRE</span>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                <span class="cp-led" id="pwrLed"></span>
+                <span style="font:6px 'Space Mono',monospace;letter-spacing:1px;color:#5a4820;">PWR</span>
+              </div>
+            </div>
+            <button class="cp-pwr-btn" id="pwrBtn" title="Liga/Desliga" onclick="togglePower()"></button>
+          </div>
         </div>
-        <div class="cp-led-stack">
-          <span class="cp-led" id="pwrLed"></span>
-          <span class="cp-led-label">PWR</span>
-        </div>
-        <button class="cp-pwr-btn" id="pwrBtn" title="Liga/Desliga" onclick="togglePower()"></button>
+
       </div>
     </div>
   </div>
@@ -665,19 +696,16 @@ VOL ▮▮▮▮▮▯▯▯▯▯ 050</span>
   <div class="prem-box">
     <h2>★ PREMIUM</h2>
     <span class="prem-badge">MODO SEM ANÚNCIOS</span>
-    <p>Para assistir sem anúncios, o YouTube precisa reconhecer sua conta Premium dentro deste player.</p>
-    <p class="prem-open-yt">
-      Passo 1 → <a id="ytLoginLink" href="https://www.youtube.com" target="_blank" onclick="openYTSession()">Abrir YouTube e confirmar login ↗</a>
-    </p>
+    <p>O YouTube <strong>bloqueia cookies de sessão</strong> em players incorporados (iframe) por política de segurança — isso impede que o Premium seja reconhecido aqui, independente de estar logado.</p>
     <ul class="prem-steps">
-      <li>Clique no link acima para abrir o YouTube</li>
-      <li>Confirme que está logado com sua conta Premium</li>
-      <li>Volte aqui e clique em <strong style="color:#f5cc70">ATIVAR</strong></li>
+      <li>Abrir o vídeo diretamente no YouTube resolve</li>
+      <li>Ou use uma extensão como <strong style="color:#f5cc70">uBlock Origin</strong> para bloquear anúncios</li>
+      <li>O botão ★ continua ativo como marcador visual</li>
     </ul>
-    <p style="font-size:10px;opacity:.6;margin-bottom:20px">O player usa sua sessão do navegador para autenticar o Premium. Nenhuma senha é solicitada ou armazenada.</p>
+    <p style="font-size:10px;opacity:.6;margin-bottom:20px">Limitação técnica do YouTube IFrame API — não há solução via embed.</p>
     <div class="prem-btns">
-      <button class="prem-btn cancel" onclick="closePremModal(false)">CANCELAR</button>
-      <button class="prem-btn confirm" onclick="closePremModal(true)">★ ATIVAR PREMIUM</button>
+      <button class="prem-btn cancel" onclick="closePremModal(false)">FECHAR</button>
+      <button class="prem-btn confirm" onclick="closePremModal(true)">★ MARCAR COMO ATIVO</button>
     </div>
   </div>
 </div>
