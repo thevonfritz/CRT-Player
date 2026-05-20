@@ -399,8 +399,85 @@ body{
   transition:all .25s;}
 .cp-led.off{background:radial-gradient(circle at 30% 30%,#5a3030 0%,#2a0808 60%,#100202 100%);
   box-shadow:inset 0 1px 1px rgba(0,0,0,.6);}
+.cp-led.prem-off{background:radial-gradient(circle at 30% 30%,#4a3a10 0%,#2a1e04 60%,#100a00 100%);
+  box-shadow:inset 0 1px 1px rgba(0,0,0,.6);}
+.cp-led.prem-on{
+  background:radial-gradient(circle at 30% 30%,#ffe080 0%,#d4900c 50%,#7a4a00 100%);
+  box-shadow:0 0 12px rgba(255,200,30,.85),0 0 4px rgba(255,200,30,1),inset 0 1px 1px rgba(255,240,180,.5);
+  animation:prem-pulse 2.4s ease-in-out infinite;
+}
+@keyframes prem-pulse{0%,100%{box-shadow:0 0 12px rgba(255,200,30,.85),0 0 4px rgba(255,200,30,1),inset 0 1px 1px rgba(255,240,180,.5);}50%{box-shadow:0 0 20px rgba(255,200,30,1),0 0 8px rgba(255,200,30,1),inset 0 1px 1px rgba(255,240,180,.6);}}
 .cp-led-label{font:8px "Space Mono",monospace;letter-spacing:1.5px;color:#5a4820;
   text-shadow:0 1px 0 rgba(255,255,250,.5);}
+
+/* === PREMIUM MODAL ========================================= */
+#premModal{
+  display:none;position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.82);backdrop-filter:blur(2px);
+  align-items:center;justify-content:center;
+}
+#premModal.open{display:flex;}
+.prem-box{
+  background:linear-gradient(160deg,#1a1408 0%,#0e0a02 100%);
+  border:1.5px solid #c89030;
+  border-radius:8px;
+  padding:36px 44px;
+  max-width:480px;width:90%;
+  font-family:"Space Mono",monospace;
+  box-shadow:0 0 40px rgba(200,140,30,.3),0 8px 40px rgba(0,0,0,.7);
+  text-align:center;
+  position:relative;
+}
+.prem-box h2{
+  font-family:"VT323",monospace;font-size:36px;letter-spacing:5px;
+  color:#f5cc70;text-shadow:0 0 14px rgba(245,200,80,.5);
+  margin-bottom:8px;
+}
+.prem-box .prem-badge{
+  font-size:11px;letter-spacing:4px;color:#c89030;margin-bottom:20px;display:block;
+}
+.prem-box p{
+  font-size:11px;line-height:1.8;color:#b09050;letter-spacing:1px;margin-bottom:24px;
+}
+.prem-box p strong{color:#f5cc70;}
+.prem-steps{
+  text-align:left;font-size:11px;line-height:2;color:#c89030;
+  border:1px solid #4a3010;background:rgba(0,0,0,.4);
+  padding:14px 18px;border-radius:4px;margin-bottom:24px;
+  letter-spacing:1px;
+}
+.prem-steps li{list-style:none;padding-left:0;}
+.prem-steps li::before{content:"▶ ";color:#e8b850;}
+.prem-btns{display:flex;gap:12px;justify-content:center;}
+.prem-btn{
+  font-family:"Space Mono",monospace;font-size:11px;letter-spacing:3px;
+  padding:10px 22px;border-radius:3px;cursor:pointer;border:1.5px solid;
+  transition:all .15s;
+}
+.prem-btn.confirm{
+  background:#e8b850;color:#0a0702;border-color:#c89030;
+  box-shadow:0 0 14px rgba(232,184,80,.4);
+}
+.prem-btn.confirm:hover{background:#f5cc70;box-shadow:0 0 20px rgba(232,184,80,.6);}
+.prem-btn.cancel{background:transparent;color:#7a5820;border-color:#4a3010;}
+.prem-btn.cancel:hover{color:#c89030;border-color:#9a6020;}
+.prem-open-yt{
+  font-size:10px;letter-spacing:2px;color:#7a5820;
+  margin-bottom:18px;display:block;
+}
+.prem-open-yt a{color:#c89030;text-decoration:none;}
+.prem-open-yt a:hover{color:#f5cc70;text-decoration:underline;}
+/* Premium screen badge */
+#premBadge{
+  position:absolute;top:10px;left:14px;z-index:25;
+  font:bold 9px "Space Mono",monospace;letter-spacing:2px;
+  color:#e8b850;background:rgba(8,4,0,.85);
+  border:1px solid #9a6818;border-radius:3px;
+  padding:4px 9px;display:none;
+  text-shadow:0 0 6px rgba(232,184,80,.6);
+  box-shadow:0 0 8px rgba(200,140,30,.3);
+}
+#premBadge.show{display:block;}
 .cp-pwr-btn{
   width:48px;height:48px;border-radius:50%;cursor:pointer;
   background:radial-gradient(circle at 35% 30%,#f8f1dc 0%,#d8c9a4 45%,#8a7848 100%);
@@ -492,6 +569,7 @@ body{
 
         <div class="screen-curve"></div>
         <button id="backBtn" title="Voltar">↺ HOME</button>
+        <div id="premBadge">★ PREMIUM</div>
       </div>
 
       <div id="sl"></div>
@@ -540,6 +618,15 @@ body{
 
         <span class="cp-divider"></span>
 
+        <div class="sw-group">
+          <div class="sw-label">PREM</div>
+          <div class="sw-keys">
+            <span class="mkey toggle" id="premBtn" title="Modo YouTube Premium" onclick="cpClick();openPremModal()">★</span>
+          </div>
+        </div>
+
+        <span class="cp-divider"></span>
+
         <div class="knob-group">
           <div class="sw-label">VOLUME</div>
           <div class="knob-wrap">
@@ -558,6 +645,10 @@ VOL ▮▮▮▮▮▯▯▯▯▯ 050</span>
 
       <div class="cp-power">
         <div class="cp-led-stack">
+          <span class="cp-led prem-off" id="premLed"></span>
+          <span class="cp-led-label">PRE</span>
+        </div>
+        <div class="cp-led-stack">
           <span class="cp-led" id="pwrLed"></span>
           <span class="cp-led-label">PWR</span>
         </div>
@@ -570,6 +661,26 @@ VOL ▮▮▮▮▮▯▯▯▯▯ 050</span>
 </div>
 
 <!-- YouTube IFrame API — define the callback BEFORE loading the script -->
+<div id="premModal">
+  <div class="prem-box">
+    <h2>★ PREMIUM</h2>
+    <span class="prem-badge">MODO SEM ANÚNCIOS</span>
+    <p>Para assistir sem anúncios, o YouTube precisa reconhecer sua conta Premium dentro deste player.</p>
+    <p class="prem-open-yt">
+      Passo 1 → <a id="ytLoginLink" href="https://www.youtube.com" target="_blank" onclick="openYTSession()">Abrir YouTube e confirmar login ↗</a>
+    </p>
+    <ul class="prem-steps">
+      <li>Clique no link acima para abrir o YouTube</li>
+      <li>Confirme que está logado com sua conta Premium</li>
+      <li>Volte aqui e clique em <strong style="color:#f5cc70">ATIVAR</strong></li>
+    </ul>
+    <p style="font-size:10px;opacity:.6;margin-bottom:20px">O player usa sua sessão do navegador para autenticar o Premium. Nenhuma senha é solicitada ou armazenada.</p>
+    <div class="prem-btns">
+      <button class="prem-btn cancel" onclick="closePremModal(false)">CANCELAR</button>
+      <button class="prem-btn confirm" onclick="closePremModal(true)">★ ATIVAR PREMIUM</button>
+    </div>
+  </div>
+</div>
 <script>
   window.__ytApiReady = false;
   window.onYouTubeIframeAPIReady = function(){
@@ -638,6 +749,7 @@ const State={
   contrast:5,       // 0..10
   ytReady:false,
   player:null,
+  premium:false,    // YouTube Premium mode
 };
 
 /* ===== METER ELEMENT (used by many handlers) ===== */
@@ -728,11 +840,13 @@ function updateMeter(){
   const coBar=bar(State.contrast,10,10);
   const volBar=bar(State.volume,100,10);
   const pwrTxt = State.power ? '<span class="hot">ON </span>' : '<span class="dim">OFF</span>';
-  const muteTxt = State.muted
-    ? '<span class="mute">MUTE</span>'
-    : (State.volume===0 ? '<span class="dim">----</span>' : '<span>LIVE</span>');
+  const liveTxt = State.premium
+    ? '<span class="hot">PRO</span>'
+    : (State.muted
+        ? '<span class="mute">MUTE</span>'
+        : (State.volume===0 ? '<span class="dim">----</span>' : '<span>LIVE</span>'));
   meterEl.innerHTML =
-    `PWR ${pwrTxt}   ${muteTxt}\n`+
+    `PWR ${pwrTxt}   ${liveTxt}\n`+
     `BRT ${brBar} ${pad(State.brightness,2)}\n`+
     `CTR ${coBar} ${pad(State.contrast,2)}\n`+
     `VOL ${volBar} ${pad(Math.round(State.volume),3)}`;
@@ -871,6 +985,12 @@ function loadVideo(){
     ytWrap.innerHTML = '';
     ytWrap.appendChild(target);
   }
+
+  if(State.premium){
+    rebuildPlayer(id);
+    return;
+  }
+
   State.player = new YT.Player('ytPlayer',{
     videoId:id,
     playerVars:{
@@ -901,6 +1021,100 @@ function applyYTVolume(){
       State.player.setVolume(State.volume);
     }
   }catch(e){}
+}
+
+/* ===== PREMIUM MODE ===== */
+const premBtn   = document.getElementById('premBtn');
+const premLed   = document.getElementById('premLed');
+const premModal = document.getElementById('premModal');
+const premBadge = document.getElementById('premBadge');
+
+function applyPremiumUI(){
+  premBtn.classList.toggle('on', State.premium);
+  premLed.className = 'cp-led ' + (State.premium ? 'prem-on' : 'prem-off');
+  premBadge.classList.toggle('show', State.premium);
+  updateMeter();
+}
+
+function openPremModal(){
+  if(!State.power) return;
+  if(State.premium){
+    // Already on → toggle off
+    State.premium = false;
+    applyPremiumUI();
+    // Reload current video without Premium flags if playing
+    if(State.player && State.player.getVideoData){
+      try{
+        const vid = State.player.getVideoData().video_id;
+        if(vid) setTimeout(()=>{ State.player.loadVideoById(vid); },100);
+      }catch(e){}
+    }
+    return;
+  }
+  premModal.classList.add('open');
+}
+
+function openYTSession(){
+  // Just open YouTube — the browser will sync the Premium session cookies
+  window.open('https://www.youtube.com','_blank','noopener');
+}
+
+function closePremModal(activate){
+  premModal.classList.remove('open');
+  if(!activate) return;
+
+  State.premium = true;
+  applyPremiumUI();
+
+  // Reload the current video using the Premium-aware player setup
+  if(State.player && State.player.getVideoData){
+    try{
+      const vid = State.player.getVideoData().video_id;
+      if(vid){
+        errMsg.textContent = '★ modo premium ativo — recarregando…';
+        setTimeout(()=>{
+          errMsg.textContent = '';
+          rebuildPlayer(vid);
+        }, 800);
+      }
+    }catch(e){}
+  }
+}
+
+function rebuildPlayer(id){
+  // Destroy existing player
+  if(State.player){
+    try{ State.player.destroy(); }catch(e){}
+    State.player = null;
+  }
+  // Rebuild target div
+  ytWrap.innerHTML = '<div id="ytPlayer"></div>';
+
+  const playerVars = {
+    autoplay: 1,
+    rel: 0,
+    modestbranding: 1,
+    playsinline: 1,
+    iv_load_policy: 3,
+  };
+  // When Premium: use the standard embed (browser session carries Premium cookie)
+  // origin helps YouTube trust the session context
+  playerVars.origin = window.location.origin || 'https://localhost';
+
+  State.player = new YT.Player('ytPlayer',{
+    videoId: id,
+    host: 'https://www.youtube.com',   // must use youtube.com, not nocookie, for Premium
+    playerVars,
+    events:{
+      onReady:(ev)=>{
+        applyYTVolume();
+        try{ ev.target.playVideo(); }catch(e){}
+      },
+      onError:(ev)=>{
+        errMsg.textContent='ERRO DE SINAL — vídeo indisponível';
+      }
+    }
+  });
 }
 
 goBtn.addEventListener('click',()=>{ cpClick(); loadVideo(); });
